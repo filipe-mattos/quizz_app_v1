@@ -31,7 +31,7 @@ class QuestionController extends GetxController with GetTickerProviderStateMixin
   late int _correctAnswer;
   int get correctAnswer => this._correctAnswer;
 
-  late int _selectedAnswer;
+  late int _selectedAnswer = 0;
   int get selectedAnswer => this._selectedAnswer;
 
   RxInt _questionNumber = 1.obs;
@@ -44,7 +44,7 @@ class QuestionController extends GetxController with GetTickerProviderStateMixin
   String get userName => this._userName;
   @override
   void onInit() {
-    _animationController = AnimationController(duration: Duration(seconds: 60), vsync: this);
+    _animationController = AnimationController(duration: Duration(seconds: 20), vsync: this);
 
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)..addListener(() {
       update();
@@ -76,7 +76,7 @@ class QuestionController extends GetxController with GetTickerProviderStateMixin
     _animationController.stop();
     update();
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
      nextQuestion();
     });
   }
@@ -101,4 +101,19 @@ class QuestionController extends GetxController with GetTickerProviderStateMixin
     _userName = name;
   }
   
+  void resetFields(){
+    this._isAnswered = false;
+    this._numOfCorrectAnswers = 0;
+    this._selectedAnswer = 0;
+    this._userName = '';
+    this._questionNumber = 1.obs;
+    _pageController = PageController();
+    _animationController.reset();
+    _animationController.forward().whenComplete((nextQuestion));
+  }
+
+  void homeScreenReset(){
+    _animationController.stop();
+  }
+
 }
